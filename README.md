@@ -1,2 +1,2 @@
 # MoE-AGIQA
-The source code of MoE-AGIQA
+The source code will made available.
