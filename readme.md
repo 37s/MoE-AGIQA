@@ -1,1 +1,1 @@
-This is the complete source code repository of MOEAGIQA, and the code will be organized and standardized in the future.
+This is the complete source code repository of MoE-AGIQA, and the code will be organized and standardized in the future.
