@@ -1,0 +1,10 @@
+torch==2.0.0+cu118
+torchaudio==2.0.1+cu118
+torchvision==0.15.1+cu118
+h5py==3.8.0
+timm==0.6.13
+image-reward==1.5
+Pillow==10.1.0
+einops==0.7.0
+tqdm==4.64.1
+scipy==1.10.1
