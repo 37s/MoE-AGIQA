@@ -352,7 +352,7 @@ def parse_args():
                     help='ensemble ways of train')
     parser.add_argument('--num_avg_val', type=int, default=15, \
                     help='ensemble ways of validation')
-    parser.add_argument('--checkpoints_dir', type=str, default='/home/anonymous_dir/AIGC-IQA/checkpoint/', \
+    parser.add_argument('--checkpoints_dir', type=str, default='/home/anonymous_dir/MoE-AGIQA/checkpoint/', \
                         help='models are saved here')
     parser.add_argument('--database', default='KonIQ-10k', type=str, \
                         help='database name (default: LIVE)')

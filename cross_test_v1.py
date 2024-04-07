@@ -9,17 +9,14 @@ import time
 from torchvision import transforms
 from PIL import Image
 from timm.models.vision_transformer import Block
-from train_2023_v2 import SaveOutput, IQARegression, setup_seed, get_vit_feature, compute_min_padding
+from train_3k_224 import SaveOutput, IQARegression, setup_seed, get_vit_feature, compute_min_padding
 os.environ['CUDA_VISIBLE_DEVICES'] = "1"
 
 if __name__ == "__main__":
     setup_seed(20)
     parser = argparse.ArgumentParser(description='PyTorch source_code test on the test data')
-    parser.add_argument("--model_file", type=str, default='/home/anonymous_dir/MoE-AGIQA/checkpoint/aigciqa2023_0403_0354/best.pth',
+    parser.add_argument("--model_file", type=str, default='/home/anonymous_dir/MoE-AGIQA/checkpoint/aigciqa2023_0329_1834/best.pth',
                         help="model file")
-    parser.add_argument('--model_path', type=str, \
-                        default='/home/anonymous_dir/MoE-AGIQA/checkpoint/koniq10k_0329_1027/best.pth', \
-                        help='Path to pre-trained vit model', metavar='')
     parser.add_argument('--num_avg_val', type=int, default=15, \
                     help='ensemble ways of validation')
     args = parser.parse_args()
@@ -28,7 +25,6 @@ if __name__ == "__main__":
 
     Info = h5py.File(args.data_info, 'r')
     moss = Info['subjective_scores'][0, :]
-    text_prompts = []
     text_prompts = [Info[Info['text_prompt'][0, :][i]][()].tobytes()[::2].decode() for i in range(len(moss)) ]
     files = [Info[Info['im_names'][0, :][i]][()].tobytes()[::2].decode() for i in range(len(moss)) ]
 
@@ -49,8 +45,6 @@ if __name__ == "__main__":
             ]
         )
     model_vit = timm.create_model("vit_base_patch16_224", pretrained=True).to(device)
-    vit_prior = timm.create_model("vit_base_patch16_224", pretrained=True).to(device)
-    vit_prior.load_state_dict(torch.load(args.model_path, map_location=device)['vit_model_state_dict'])
     model_regressor = IQARegression().to(device)
     reward = ImageReward.ImageReward(med_config='/home/anonymous_dir/models--THUDM--ImageReward/med_config.json', device=device).to(device)
     checkpoint = torch.load(args.model_file)
@@ -59,7 +53,6 @@ if __name__ == "__main__":
     model_regressor.load_state_dict(checkpoint['regressor_model_state_dict'])
 
     model_vit.eval()
-    vit_prior.eval()
     model_regressor.eval() 
     reward.eval()
     directory_name = "/home/anonymous_dir/AGIQA-1K/"
@@ -72,7 +65,7 @@ if __name__ == "__main__":
                 handle = layer.register_forward_hook(save_output)
                 hook_handles.append(handle)
             preds = []
-        with open('./output_senet_2023_1k.txt', 'w') as file:
+        with open('./output_2023_1k.txt', 'w') as file:
             for i in range(len(moss)):
                 start_time = time.time()
                 pred = 0
@@ -98,13 +91,12 @@ if __name__ == "__main__":
                 text_features = text_output.last_hidden_state
                 for j in range(args.num_avg_val):
                     im_ = new_transform(im).unsqueeze(0).to(device)
-                    prior = vit_prior.forward_features(im_)[:,0,:]
                     _ = model_vit(im_)
                     vit_dis = get_vit_feature(save_output)
                     save_output.outputs.clear()
                     B, N, C = vit_dis.shape
                     f_dis = vit_dis.transpose(1, 2).view(B, C, 14, 14)
-                    pred += model_regressor(f_dis, text_features, prior).item()
+                    pred += model_regressor(f_dis, text_features).item()
                 pred /= args.num_avg_val
                 preds.append(pred)
                 end_time = time.time()

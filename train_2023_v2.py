@@ -581,7 +581,7 @@ def parse_args():
     parser.add_argument('--weight_decay', type=float, default=1e-5, \
                         help='weight decay')
     parser.add_argument('--model_path', type=str, \
-                        default='/home/anonymous_dir/AIGC-IQA/checkpoint/koniq10k_0329_1027/best.pth', \
+                        default='/home/anonymous_dir/MoE-AGIQA/checkpoint/koniq10k_0329_1027/best.pth', \
                         help='Path to pretrained vit model', metavar='')
     parser.add_argument('--drop_path_rate', type=float, default=0.1, \
                         help='drop path rate')   
@@ -599,7 +599,7 @@ def parse_args():
                     help='ensemble ways of train')
     parser.add_argument('--num_avg_val', type=int, default=15, \
                     help='ensemble ways of validation')
-    parser.add_argument('--checkpoints_dir', type=str, default='/home/anonymous_dir/AIGC-IQA/checkpoint/', \
+    parser.add_argument('--checkpoints_dir', type=str, default='/home/anonymous_dir/MoE-AGIQA/checkpoint/', \
                         help='models are saved here')
     parser.add_argument('--database', default='AIGCIQA2023', type=str, \
                         help='database name (default: AIGCIQA2023)')
@@ -608,7 +608,7 @@ def parse_args():
     args = parser.parse_args()
 
     if args.database == 'AIGCIQA2023':
-        args.data_info = '/home/anonymous_dir/AIGC-IQA/data/AIGCIQA2023.mat'
+        args.data_info = '/home/anonymous_dir/MoE-AGIQA/data/AIGCIQA2023.mat'
         args.im_dir = '/home/anonymous_dir/AIGCIQA2023/Image/'
 
     return args
