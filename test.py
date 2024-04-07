@@ -9,7 +9,7 @@ import time
 from torchvision import transforms
 from PIL import Image
 from timm.models.vision_transformer import Block
-from train_2023_224_senet import SaveOutput, IQARegression, setup_seed, get_vit_feature, compute_min_padding
+from train_2023_v2 import SaveOutput, IQARegression, setup_seed, get_vit_feature, compute_min_padding
 os.environ['CUDA_VISIBLE_DEVICES'] = "1"
 
 if __name__ == "__main__":
